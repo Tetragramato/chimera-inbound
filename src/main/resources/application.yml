@@ -1,0 +1,17 @@
+ged:
+  directory:
+    input: directoryFile
+    output: directoryOut
+  amqp:
+    exchange: messagingGed.topic
+    queue: messagingGed.files
+    routingKey: messageGed.incomingFile
+  document:
+    extensions:
+      - ".txt"
+      - ".pdf"
+
+spring:
+  rabbitmq:
+    username: guest
+    password: guest
