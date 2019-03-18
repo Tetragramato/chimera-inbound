@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import java.time.ZonedDateTime;
 
 /**
+ * Transformer from a standard Message to custom Message.
+ *
  * @author vivienbrissat
  * Date: 2019-01-09
  */
@@ -18,7 +20,7 @@ public class TransformerToFileOutputMessage {
 
     private String directoryOutput;
 
-    public TransformerToFileOutputMessage(@Value("${ged.directory.output}") final String directoryOutput) {
+    public TransformerToFileOutputMessage(@Value("${chimera.directory.output}") final String directoryOutput) {
         this.directoryOutput = directoryOutput;
     }
 

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
+ * Configuration from YML for managed documents extensions.
+ *
  * @author vivienbrissat
  * Date: 2019-01-11
  */
@@ -16,7 +18,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ConfigurationProperties(prefix="ged.document")
+@ConfigurationProperties(prefix="chimera.document")
 public class FileFilterConfiguration {
     private List<String> extensions;
 }

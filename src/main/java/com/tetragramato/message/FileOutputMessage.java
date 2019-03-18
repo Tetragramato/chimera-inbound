@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import java.time.ZonedDateTime;
 
 /**
+ * Custom message for AMQP.
+ *
  * @author vivienbrissat
  * Date: 2019-01-09
  */

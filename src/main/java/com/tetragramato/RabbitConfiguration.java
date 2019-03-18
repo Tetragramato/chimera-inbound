@@ -15,6 +15,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
+ * Configuration for Rabbit MQ.
+ *
  * @author vivienbrissat
  * Date: 2019-01-09
  */
@@ -27,14 +29,19 @@ public class RabbitConfiguration {
 
     private String routingKey;
 
-    public RabbitConfiguration(@Value("${ged.amqp.exchange}") final String topicExchangeName,
-                               @Value("${ged.amqp.queue}") final String queueName,
-                               @Value("${ged.amqp.routingKey}") final String routingKey) {
+    public RabbitConfiguration(@Value("${chimera.amqp.exchange}") final String topicExchangeName,
+                               @Value("${chimera.amqp.queue}") final String queueName,
+                               @Value("${chimera.amqp.routingKey}") final String routingKey) {
         this.topicExchangeName = topicExchangeName;
         this.queueName = queueName;
         this.routingKey = routingKey;
     }
 
+    /**
+     * Custom ObjectMapper for Jackson.
+     * Needed for zonedDateTime format in JSON.
+     * @return ObjectMapper
+     */
     private ObjectMapper jsonObjectMapper() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());

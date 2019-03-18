@@ -2,6 +2,7 @@ package com.tetragramato;
 
 import com.tetragramato.filter.FileExtensionsFilter;
 import com.tetragramato.message.transformer.TransformerToFileOutputMessage;
+import lombok.Data;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -20,9 +21,15 @@ import org.springframework.messaging.MessageChannel;
 import java.io.File;
 
 /**
+ * Main Spring Integration Flow configuration.
+ *
+ * For this, we have 3 flows :
+ *  fileFromInputDir -> fileToOutputDir -> fileToAMQP
+ *
  * @author vivienbrissat
  * Date: 2019-01-10
  */
+@Data
 @Configuration
 public class FlowConfiguration {
 
@@ -38,10 +45,10 @@ public class FlowConfiguration {
 
     private FileFilterConfiguration fileFilterConfiguration;
 
-    public FlowConfiguration(@Value("${ged.directory.input}") final String directoryInput,
-                             @Value("${ged.directory.output}") final String directoryOutput,
-                             @Value("${ged.amqp.exchange}") final String topicExchangeName,
-                             @Value("${ged.amqp.routingKey}") final String routingKey,
+    public FlowConfiguration(@Value("${chimera.directory.input}") final String directoryInput,
+                             @Value("${chimera.directory.output}") final String directoryOutput,
+                             @Value("${chimera.amqp.exchange}") final String topicExchangeName,
+                             @Value("${chimera.amqp.routingKey}") final String routingKey,
                              final TransformerToFileOutputMessage transformerToFileOutputMessage,
                              final FileFilterConfiguration fileFilterConfiguration) {
         this.directoryInput = directoryInput;
@@ -52,11 +59,21 @@ public class FlowConfiguration {
         this.fileFilterConfiguration = fileFilterConfiguration;
     }
 
+    /**
+     * Channel for the fileFromInputDir flow.
+     *
+     * @return MessageChannel
+     */
     @Bean
     public MessageChannel publishSubscribeInputFile() {
         return MessageChannels.publishSubscribe().get();
     }
 
+    /**
+     * Channel for the fileToOutputDir flow.
+     *
+     * @return MessageChannel
+     */
     @Bean
     public MessageChannel publishSubscribeOutputFile() {
         return MessageChannels.publishSubscribe().get();
@@ -67,6 +84,11 @@ public class FlowConfiguration {
         return new FileExtensionsFilter(fileFilterConfiguration.getExtensions());
     }
 
+    /**
+     * Flow for scanning files in the input Directory, and publish a message with documents infos in his MessageChannel.
+     *
+     * @return IntegrationFlow
+     */
     @Bean
     public IntegrationFlow fileFromInputDir() {
         return IntegrationFlows.from(Files.inboundAdapter(new File(directoryInput))
@@ -79,6 +101,11 @@ public class FlowConfiguration {
                                .get();
     }
 
+    /**
+     * Flow for move documents in Output Directory, and publish a message with documents infos in his MessageChannel.
+     *
+     * @return IntegrationFlow
+     */
     @Bean
     public IntegrationFlow fileToOutputDir() {
         return IntegrationFlows.from(publishSubscribeInputFile())
@@ -91,6 +118,11 @@ public class FlowConfiguration {
                                .get();
     }
 
+    /**
+     * Flow for publishing the message from the Output messageChannel to AMQP.
+     *
+     * @return IntegrationFlow
+     */
     @Bean
     public IntegrationFlow fileToAMQP(AmqpTemplate amqpTemplate) {
         return IntegrationFlows.from(publishSubscribeOutputFile())

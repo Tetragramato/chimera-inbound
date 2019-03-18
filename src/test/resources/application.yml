@@ -1,7 +1,7 @@
 chimera:
   directory:
-    input: directoryFile
-    output: directoryOut
+    input: testsInbound
+    output: build/directoryOut
   amqp:
     exchange: messagingChimera.topic
     queue: messagingChimera.files

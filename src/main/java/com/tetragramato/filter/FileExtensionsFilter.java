@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * Filter for managed documents extensions.
+ *
  * @author vivienbrissat
  * Date: 2019-01-11
  */
