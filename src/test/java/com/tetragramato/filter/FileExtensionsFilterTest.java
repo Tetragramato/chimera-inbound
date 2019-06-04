@@ -28,7 +28,7 @@ public class FileExtensionsFilterTest {
 
         //Then
         assertThat(filesFiltered.size()).isEqualTo(2);
-        assertThat(filesFiltered).asList().isSubsetOf(files);
+        assertThat(filesFiltered).asList().isSubsetOf((Object[])files);
     }
 
 }
