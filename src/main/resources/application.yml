@@ -1,6 +1,6 @@
 chimera:
   directory:
-    input: directoryFile
+    input: directoryIn
     output: directoryOut
   amqp:
     exchange: messagingChimera.topic

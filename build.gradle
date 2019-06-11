@@ -33,7 +33,15 @@ task unpack(type: Copy) {
 
 docker {
     name "${project.group}/${rootProject.name}"
-    copySpec.from(tasks.unpack.outputs).into("dependency")
+    copySpec.with {
+        from(tasks.unpack.outputs) {
+            into "dependency"
+        }
+        /*from('.') {
+            include 'wait-for-it.sh'
+            into '.'
+        }*/
+    }
     buildArgs(['DEPENDENCY': "dependency"])
 }
 
