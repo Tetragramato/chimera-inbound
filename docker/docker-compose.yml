@@ -1,0 +1,17 @@
+version: "3.7"
+services:
+  rabbit:
+    image: rabbitmq:3-management
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
+  chimera:
+    image: com.tetragramato/chimera-inbound:latest
+    volumes:
+      - type: bind
+        source: /path/to/your/inboud
+        target: /directoryIn
+      - type: bind
+        source: /path/to/your/outbound
+        target: /directoryOut

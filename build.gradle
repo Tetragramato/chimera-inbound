@@ -33,22 +33,25 @@ task unpack(type: Copy) {
 
 docker {
     name "${project.group}/${rootProject.name}"
+    dockerfile project.file("docker/Dockerfile")
     copySpec.with {
-        from(tasks.unpack.outputs) {
-            into "dependency"
+        from("build/libs/") {
+            include "${rootProject.name}-*.jar"
+            into 'build-docker'
         }
-        /*from('.') {
-            include 'wait-for-it.sh'
-            into '.'
-        }*/
+        from('docker') {
+           include 'application-docker.yml'
+           into '.'
+       }
     }
-    buildArgs(['DEPENDENCY': "dependency"])
+    buildArgs(['DIRECTORY': "build-docker"])
 }
 
 dependencies {
     implementation('org.springframework.boot:spring-boot-starter-integration')
     implementation('org.springframework.integration:spring-integration-file')
     implementation('org.springframework.integration:spring-integration-amqp')
+    implementation('org.springframework.retry:spring-retry')
     implementation('com.fasterxml.jackson.core:jackson-databind')
     implementation('com.fasterxml.jackson.datatype:jackson-datatype-jsr310')
     compileOnly("org.projectlombok:lombok")

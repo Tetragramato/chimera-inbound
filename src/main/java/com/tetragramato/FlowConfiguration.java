@@ -86,6 +86,7 @@ public class FlowConfiguration {
 
     /**
      * Flow for scanning files in the input Directory, and publish a message with documents infos in his MessageChannel.
+     * FIXME : watch-service from java NIO dooes not work with Docker Volumes.
      *
      * @return IntegrationFlow
      */
@@ -94,7 +95,8 @@ public class FlowConfiguration {
         return IntegrationFlows.from(Files.inboundAdapter(new File(directoryInput))
                                           .ignoreHidden(true)
                                           .preventDuplicates(true)
-                                          .useWatchService(true)
+                                          //.useWatchService(true)
+                                          //.watchEvents(FileReadingMessageSource.WatchEventType.CREATE)
                                           .filter(extensionsAllowedFilter()), e -> e.poller(Pollers.fixedDelay(1000)))
                                .log(LoggingHandler.Level.INFO, "TookInputFile")
                                .channel(publishSubscribeInputFile())
